@@ -1,3 +1,5 @@
+// This tool is a modification of https://github.com/wiwikuan/fast-srt-subtitle
+
 const SRT_ID = 'srtFile';
 const VIDEO_ID = 'videoFile';
 
@@ -8,37 +10,56 @@ const textArea = document.querySelector('#textArea');
 const status = document.querySelector('#status');
 const reactTime = 0.4;
 let subTexts = [];
-let currentStamping = 0;
+let currentLyricsLine = 0;
 let lines = [];
 
 function clamp(num) {
   return Math.max(num, 0);
 }
 
+function getCurrentTime() {
+  const needReactionTime = document.querySelector('input[name="need-reaction"]:checked').value;
+  if (needReactionTime === 'need') {
+    return video.currentTime - reactTime;
+  } else {
+    return video.currentTime;
+  }
+}
+
 const keyMap = {
   'k': video => {
-    if (currentStamping >= lines.length) {
+    if (currentLyricsLine >= lines.length) {
       return;
     }
 
-    lines[currentStamping + 1][0] = clamp(video.currentTime - reactTime);
-    if (lines[currentStamping][1] > video.currentTime - reactTime || lines[currentStamping][1] === null){
-      lines[currentStamping][1] = clamp(video.currentTime - 0.03 - reactTime);
+    // If current line is not stamped yet, stamp it;
+    // otherwise, move to next line
+    if (lines[currentLyricsLine][0] === null) {
+      lines[currentLyricsLine][0] = clamp(getCurrentTime());
+    } else {
+      lines[currentLyricsLine][1] = clamp(getCurrentTime());
+      lines[currentLyricsLine + 1][0] = clamp(getCurrentTime());
+      currentLyricsLine += 1;
     }
-
-    currentStamping += 1;
   },
   'l': video => {
-    lines[currentStamping] = [
-      lines[currentStamping][0],
-      video.currentTime - reactTime
-    ];
+    // if current line is not stamped yet, use previous line's end time as start time
+    if (lines[currentLyricsLine][0] === null) {
+      try {
+        lines[currentLyricsLine][0] = lines[currentLyricsLine - 1][1];
+      } catch (e) {
+        lines[currentLyricsLine][0] = 0;
+      }
+    }
+
+    lines[currentLyricsLine][1] = clamp(getCurrentTime());
+    currentLyricsLine += 1;
   },
   'i': () => {
-    currentStamping -= 1;
+    currentLyricsLine -= 1;
   },
   'o': () => {
-    currentStamping += 1;
+    currentLyricsLine += 1;
   },
   'u': () => (video.currentTime -= 2),
   'p': () => (video.currentTime += 2),
@@ -46,7 +67,7 @@ const keyMap = {
 };
 
 function getCurrentStatus() {
-  return `Stamping Line ${currentStamping} | Playhead: ${video.currentTime}`;
+  return `Stamping Line ${currentLyricsLine} | Playhead: ${video.currentTime}`;
 }
 
 function execHotkey(keyMap) {
@@ -63,9 +84,9 @@ function updateContent() {
   const head = '** 目前 ---> ';
 
   const content = subTexts
-    .slice(currentStamping, currentStamping + 5)
+    .slice(currentLyricsLine, currentLyricsLine + 5)
     .map((text, i) => {
-      const [timeStart, timeEnd] = lines[currentStamping + i];
+      const [timeStart, timeEnd] = lines[currentLyricsLine + i];
       return `${i === 0 ? head : ''}${text} | ${timeStart} --> ${timeEnd}`;
     })
     .join('\n');
