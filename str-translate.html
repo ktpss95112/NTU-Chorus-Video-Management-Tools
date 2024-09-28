@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRT Translate</title>
+</head>
+<body>
+    <h1>SRT Translate</h1>
+    <p>
+        請上傳一個 srt 檔和兩種語言的歌詞 txt 檔。請注意：
+        <ul>
+            <li>srt 檔的每段歌詞都只能有一行，不能有換行符號。</li>
+            <li>srt 檔與原文歌詞檔的同一行內容必須完全相同，不能有多餘的行首/行尾空白或標點。</li>
+            <li>原文歌詞檔與譯文歌詞檔的行數須完全相同且一一對應。</li>
+        </ul>
+    </p>
+    <label>SRT 字幕檔<input type="file" id="srt-file"></label><br>
+    <label>原文歌詞檔<input type="file" id="original-file"></label><br>
+    <label>譯文歌詞檔<input type="file" id="translated-file"></label><br>
+    <button id="translate">翻譯</button><br>
+    <br>
+    <br>
+    <label>
+        翻譯後的 srt 檔：<br>
+        <textarea id="translated-srt" rows="8"></textarea>
+    </label><br>
+    <button id="download">下載</button>
+
+    <script>
+        const srtFile = document.getElementById('srt-file');
+        const originalFile = document.getElementById('original-file');
+        const translatedFile = document.getElementById('translated-file');
+        const translateButton = document.getElementById('translate');
+        const translatedTextarea = document.getElementById('translated-srt');
+        const downloadButton = document.getElementById('download');
+
+        translateButton.addEventListener('click', async () => {
+            const srtContent = await srtFile.files[0].text();
+            const originalContent = await originalFile.files[0].text();
+            const translatedContent = await translatedFile.files[0].text();
+
+            const srtLines = srtContent.split('\n');
+            const originalLines = originalContent.split('\n');
+            const translatedLines = translatedContent.split('\n');
+
+            if (originalLines.length !== translatedLines.length) {
+                alert(`原文歌詞檔（${originalLines.length} 行）與譯文歌詞檔（${translatedLines.length} 行）的行數不同。`);
+                return;
+            }
+
+            for (let i = 0; i < originalLines.length; i++) {
+                const srtLine = srtLines[i * 4 + 2];
+                const originalLine = originalLines[i];
+                const translatedLine = translatedLines[i];
+
+                if (srtLine !== originalLine) {
+                    alert(`第 ${i + 1} 行的 srt 檔與原文歌詞檔的內容不同。\n\nsrt 檔：${srtLine}\n原文歌詞檔：${originalLine}`);
+                    return;
+                }
+
+                srtLines[i * 4 + 2] = translatedLine;
+            }
+
+            translatedTextarea.value = srtLines.join('\n');
+        });
+
+        downloadButton.addEventListener('click', () => {
+            const blob = new Blob([translatedTextarea.value], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'translated.srt';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        </script>
+
+</body>
+</html>
