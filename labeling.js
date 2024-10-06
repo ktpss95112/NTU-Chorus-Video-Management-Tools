@@ -107,7 +107,6 @@ function handleFileUpload(e) {
       if (e.target.id === SRT_ID) {
         subTexts = reader.result.split('\n');
         subTexts.forEach((_, i) => (lines[i] = [null, null]));
-        lines[0][0] = 0;
 
         updateContent();
 
