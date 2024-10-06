@@ -17,8 +17,16 @@ function clamp(num) {
   return Math.max(num, 0);
 }
 
+function getNeedReactionTime() {
+  try {
+    return document.querySelector('input[name="need-reaction"]:checked').value;
+  } catch (e) {
+    return undefined;
+  }
+}
+
 function getCurrentTime() {
-  const needReactionTime = document.querySelector('input[name="need-reaction"]:checked').value;
+  const needReactionTime = getNeedReactionTime();
   if (needReactionTime === 'need') {
     return video.currentTime - reactTime;
   } else {
@@ -71,7 +79,7 @@ function getCurrentStatus() {
 }
 
 function execHotkey(keyMap) {
-  document.addEventListener('keypress', function(e) {
+  document.addEventListener('keydown', function(e) {
     const execFn = keyMap[e.key.toLowerCase()];
     if (typeof execFn === 'function') {
       execFn(video);
@@ -130,6 +138,12 @@ videoInput.addEventListener('change', handleFileUpload);
 srtInput.addEventListener('change', handleFileUpload);
 
 video.addEventListener('timeupdate', function(e) {
+  if (typeof getNeedReactionTime() === 'undefined') {
+    video.pause();
+    alert('請選擇是否需要反應時間！');
+    return;
+  }
+
   status.textContent = getCurrentStatus();
 });
 
