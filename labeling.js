@@ -178,7 +178,7 @@ function makeSRT() {
   const a = document.createElement('a');
   const file = new Blob([srt], { type: 'text/plain;charset=utf-8' });
   a.href = URL.createObjectURL(file);
-  a.download = 'srt.txt';
+  a.download = 'lyrics.srt';
   a.click();
   URL.revokeObjectURL(a.href);
   a.remove();
