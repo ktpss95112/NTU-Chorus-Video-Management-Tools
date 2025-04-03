@@ -34,58 +34,58 @@ function getCurrentTime() {
   }
 }
 
-const keyMap = {
-  'k': video => {
-    if (currentLyricsLine >= lines.length) {
-      return;
-    }
+function execHotkey() {
+  document.addEventListener('keydown', function(e) {
+    if (e.key.toLowerCase() === 'k') {
+      if (currentLyricsLine >= lines.length) {
+        return;
+      }
 
-    // If current line is not stamped yet, stamp it;
-    // otherwise, move to next line
-    if (lines[currentLyricsLine][0] === null) {
-      lines[currentLyricsLine][0] = clamp(getCurrentTime());
-    } else {
-      lines[currentLyricsLine][1] = clamp(getCurrentTime());
-      lines[currentLyricsLine + 1][0] = clamp(getCurrentTime());
-      currentLyricsLine += 1;
-    }
-  },
-  'l': video => {
-    // if current line is not stamped yet, use previous line's end time as start time
-    if (lines[currentLyricsLine][0] === null) {
-      try {
-        lines[currentLyricsLine][0] = lines[currentLyricsLine - 1][1];
-      } catch (e) {
-        lines[currentLyricsLine][0] = 0;
+      // If current line is not stamped yet, stamp it;
+      // otherwise, move to next line
+      if (lines[currentLyricsLine][0] === null) {
+        lines[currentLyricsLine][0] = clamp(getCurrentTime());
+      } else {
+        lines[currentLyricsLine][1] = clamp(getCurrentTime());
+        lines[currentLyricsLine + 1][0] = clamp(getCurrentTime());
+        currentLyricsLine += 1;
       }
     }
+    if (e.key.toLowerCase() === 'l') {
+      // if current line is not stamped yet, use previous line's end time as start time
+      if (lines[currentLyricsLine][0] === null) {
+        try {
+          lines[currentLyricsLine][0] = lines[currentLyricsLine - 1][1];
+        } catch (e) {
+          lines[currentLyricsLine][0] = 0;
+        }
+      }
 
-    lines[currentLyricsLine][1] = clamp(getCurrentTime());
-    currentLyricsLine += 1;
-  },
-  'i': () => {
-    currentLyricsLine -= 1;
-  },
-  'o': () => {
-    currentLyricsLine += 1;
-  },
-  'u': () => (video.currentTime -= 2),
-  'p': () => (video.currentTime += 2),
-  'q': () => makeSRT()
-};
+      lines[currentLyricsLine][1] = clamp(getCurrentTime());
+      currentLyricsLine += 1;
+    }
+    if (e.key.toLowerCase() === 'i') {
+      currentLyricsLine -= 1;
+    }
+    if (e.key.toLowerCase() === 'o') {
+      currentLyricsLine += 1;
+    }
+    if (e.key.toLowerCase() === 'u') {
+      video.currentTime -= 2;
+    }
+    if (e.key.toLowerCase() === 'p') {
+      video.currentTime += 2;
+    }
+    if (e.key.toLowerCase() === 'q') {
+      makeSRT();
+    }
+
+    updateContent();
+  });
+}
 
 function getCurrentStatus() {
   return `Stamping Line ${currentLyricsLine} | Playhead: ${video.currentTime}`;
-}
-
-function execHotkey(keyMap) {
-  document.addEventListener('keydown', function(e) {
-    const execFn = keyMap[e.key.toLowerCase()];
-    if (typeof execFn === 'function') {
-      execFn(video);
-      updateContent();
-    }
-  });
 }
 
 function updateContent() {
@@ -118,7 +118,7 @@ function handleFileUpload(e) {
 
         updateContent();
 
-        execHotkey(keyMap);
+        execHotkey();
       }
     };
 
