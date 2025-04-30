@@ -158,7 +158,7 @@ class Labeling {
 
     const reader = new FileReader();
     reader.addEventListener('load', () => {
-      this.subTexts = reader.result.split('\n');
+      this.subTexts = reader.result.replace(/\r\n/g, '\n').split('\n');
       this.subTexts.forEach((_, i) => (this.lines[i] = [null, null]));
 
       this.updateContent();
