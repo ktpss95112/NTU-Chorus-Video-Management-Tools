@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 </script>
@@ -17,9 +18,9 @@
 		</a>
 
 		<ul class="flex items-center gap-3">
-			<li><a class="px-3 py-1 rounded hover:bg-white/5" href="/">Home</a></li>
-			<li><a class="px-3 py-1 rounded hover:bg-white/5" href="/lyrics-maker">Lyrics Maker</a></li>
-			<li><a class="px-3 py-1 rounded hover:bg-white/5" href="/lyrics-translation">Lyrics Translation</a></li>
+			<li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/' ? "bg-white/20" : ""]} href="/">Home</a></li>
+			<li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/lyrics-maker' ? "bg-white/20" : ""]} href="/lyrics-maker">Lyrics Maker</a></li>
+			<li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/lyrics-translation' ? "bg-white/20" : ""]} href="/lyrics-translation">Lyrics Translation</a></li>
 		</ul>
 	</div>
 </nav>
