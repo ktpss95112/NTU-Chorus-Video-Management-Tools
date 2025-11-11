@@ -13,8 +13,8 @@
     });
 </script>
 
-<div class="flex flex-col md:flex-row h-screen">
-    <aside class="w-full md:w-1/2 h-1/2 md:h-full border-b md:border-b-0 md:border-r border-gray-200 bg-gray-50 p-8 overflow-auto">
+<div class="flex flex-col md:flex-row flex-1 min-h-0">
+    <aside class="w-full md:w-1/2 h-1/2 md:h-auto border-b md:border-b-0 md:border-r border-gray-200 bg-gray-50 p-8 overflow-auto">
         <h1 class="text-2xl font-semibold mb-4">字幕</h1>
 
         {#if lyricsFile && lyricsFile.length > 0}
@@ -42,7 +42,7 @@
         {/if}
     </aside>
 
-    <main class="w-full md:w-1/2 h-1/2 md:h-full p-8 overflow-auto">
+    <main class="w-full md:w-1/2 h-1/2 md:h-auto p-8 overflow-auto">
         <h1 class="text-2xl font-semibold mb-4">影片</h1>
 
         {#if videoFile && videoFile.length > 0}
