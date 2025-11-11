@@ -1,6 +1,6 @@
 <main class="min-h-screen flex items-center justify-center p-4 box-border">
     <div class="text-center">
-        <h1 class="text-2xl font-semibold">Welcome!</h1>
+        <h1 class="text-2xl font-semibold">lyrics-translation</h1>
         <!-- <p>Content centered both vertically and horizontally.</p> -->
     </div>
 </main>
