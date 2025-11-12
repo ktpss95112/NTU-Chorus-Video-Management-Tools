@@ -3,16 +3,22 @@
         text = $bindable(),
         start = $bindable(),
         end = $bindable(),
+        highlightStart,
+        highlightEnd,
         createLyricsBefore,
         createLyricsAfter,
         deleteThisLine,
+        onfocus,
     } = $props<{
         text: string;
         start: number | null;
         end: number | null;
+        highlightStart: boolean;
+        highlightEnd: boolean;
         createLyricsBefore: () => void;
         createLyricsAfter: () => void;
         deleteThisLine: () => void;
+        onfocus: () => void;
     }>();
 </script>
 
@@ -32,6 +38,7 @@
             bind:value={text}
             class="col-start-2 row-span-3 p-1.5 text-sm min-h-[2.5rem] w-full resize-y rounded border border-gray-300 bg-white/70 focus:outline-none focus:ring-1 focus:ring-blue-500"
             placeholder="Enter lyrics..."
+            {onfocus}
         ></textarea>
 
         <button
@@ -40,7 +47,7 @@
             aria-label="Delete line"
             title="刪除此行字幕"
         >
-            🗑️
+            X
         </button>
 
         <button
@@ -54,19 +61,23 @@
     </div>
 
     <div class="grid grid-cols-[auto_1fr] items-center gap-x-1.5 gap-y-1.5 w-24 self-center">
-        <span class="text-[10px] text-gray-600 text-right">Start</span>
+        <span class="text-[10px] text-gray-600 text-right">開始</span>
         <input
             type="text"
             bind:value={start}
             aria-label="Start"
-            class="w-full min-w-0 p-0.5 text-[10px] rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-400"
+            class={["w-full min-w-0 p-0.5 text-[10px] text-center rounded border border-gray-300 focus:outline-none", highlightStart ? 'ring-2 ring-blue-400' : '']}
+            placeholder="00:00:00.000"
+            {onfocus}
         />
-        <span class="text-[10px] text-gray-600 text-right">End</span>
+        <span class="text-[10px] text-gray-600 text-right">結束</span>
         <input
             type="text"
             bind:value={end}
             aria-label="End"
-            class="w-full min-w-0 p-0.5 text-[10px] rounded border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-400"
+            class={["w-full min-w-0 p-0.5 text-[10px] text-center rounded border border-gray-300 focus:outline-none", highlightEnd ? 'ring-2 ring-blue-400' : '']}
+            placeholder="00:00:00.000"
+            {onfocus}
         />
     </div>
 </div>

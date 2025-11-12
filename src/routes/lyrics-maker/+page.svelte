@@ -9,6 +9,11 @@
     let reactionTime = $state<number>(0.4);
 
     let lyrics = $state<Array<{ start: number | null; end: number | null; text: string }>>([]);
+    let currentIndex = $state<number>(0);
+
+    let startThisLineCursor = $derived(currentIndex);
+    let startNextLineCursor = $derived(lyrics[currentIndex]?.start ? currentIndex + 1 : currentIndex);
+    let endThisLineCursor = $derived(currentIndex);
 
     $effect(() => {
         if (videoFile && videoFile.length > 0) {
@@ -30,6 +35,9 @@
                 const parsedLyrics: Array<{ start: number | null; end: number | null; text: string }> = [];
                 for (const line of lines) {
                     parsedLyrics.push({ start: null, end: null, text: line });
+                }
+                if (parsedLyrics.length === 0) {
+                    parsedLyrics.push({ start: null, end: null, text: '' });
                 }
                 lyrics = parsedLyrics;
             };
@@ -72,6 +80,8 @@
                         bind:text={lyric.text}
                         bind:start={lyric.start}
                         bind:end={lyric.end}
+                        highlightStart={index === startThisLineCursor || index === startNextLineCursor}
+                        highlightEnd={index === endThisLineCursor}
                         createLyricsBefore={() => {
                             lyrics = [
                                 ...lyrics.slice(0, index),
@@ -91,6 +101,9 @@
                                 ...lyrics.slice(0, index),
                                 ...lyrics.slice(index + 1),
                             ];
+                        }}
+                        onfocus={() => {
+                            currentIndex = index;
                         }}
                     />
                 {/each}
