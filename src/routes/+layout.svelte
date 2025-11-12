@@ -26,7 +26,7 @@
         </div>
     </nav>
 
-    <div class="flex-1 flex flex-col overflow-y-auto min-h-0">
+    <div class="flex-1 flex flex-col min-h-0">
         {@render children()}
     </div>
 </div>
