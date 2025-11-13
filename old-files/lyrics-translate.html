@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyrics Translate</title>
+</head>
+<body>
+    <h1>Lyrics Translate</h1>
+    <p>
+        請上傳一個 srt 檔（或 sbv 檔）和兩種語言的歌詞 txt 檔。請注意：
+        <ul>
+            <li>字幕檔的每段歌詞都只能有一行，不能有換行符號。</li>
+            <li>字幕檔與原文歌詞檔的同一行內容必須完全相同，不能有多餘的行首/行尾空白或標點。</li>
+            <li>原文歌詞檔與譯文歌詞檔的行數須完全相同且一一對應。</li>
+        </ul>
+    </p>
+    <label>字幕檔（srt 或 sbv 檔）<input type="file" id="lyrics-file"></label><span id="file-type-hint"></span><br>
+    <label>原文歌詞檔<input type="file" id="original-file"></label><br>
+    <label>譯文歌詞檔<input type="file" id="translated-file"></label><br>
+    <button id="translate">翻譯</button><br>
+    <br>
+    <br>
+    <label>
+        翻譯後的字幕檔：<br>
+        <textarea id="translated-lyrics" rows="8"></textarea>
+    </label><br>
+    <button id="download">下載</button>
+
+    <script>
+        const lyricsFile = document.getElementById('lyrics-file');
+        const originalFile = document.getElementById('original-file');
+        const translatedFile = document.getElementById('translated-file');
+        const translateButton = document.getElementById('translate');
+        const translatedTextarea = document.getElementById('translated-lyrics');
+        const downloadButton = document.getElementById('download');
+        const lyricsFileTypeHint = document.getElementById('file-type-hint');
+
+        function detectLyricsFileType(content) {
+            const lines = content.split('\n');
+
+            let isSrt = true;
+            for (let i = 1; i < lines.length; i += 4) {
+                if (!lines[i].includes('-->')) {
+                    isSrt = false;
+                    break;
+                }
+            }
+            if (isSrt) return 'srt';
+
+            let isSbv = true;
+            for (let i = 0; i < lines.length; i += 3) {
+                if (!lines[i].includes(',')) {
+                    isSbv = false;
+                    break;
+                }
+            }
+            if (isSbv) return 'sbv';
+
+            return 'unknown';
+        }
+
+        lyricsFile.addEventListener('change', async () => {
+            const content = await lyricsFile.files[0].text();
+            const fileType = detectLyricsFileType(content);
+            lyricsFileTypeHint.textContent = `（檔案類型：${fileType}）`;
+            if (fileType === 'unknown') {
+                alert('字幕檔格式不正確。');
+                return;
+            }
+        });
+
+        translateButton.addEventListener('click', async () => {
+            const lyricsContent = await lyricsFile.files[0].text();
+            const originalContent = await originalFile.files[0].text();
+            const translatedContent = await translatedFile.files[0].text();
+
+            const lyricsLines = lyricsContent.split('\n');
+            const originalLines = originalContent.split('\n');
+            const translatedLines = translatedContent.split('\n');
+
+            if (originalLines.length !== translatedLines.length) {
+                alert(`原文歌詞檔（${originalLines.length} 行）與譯文歌詞檔（${translatedLines.length} 行）的行數不同。`);
+                return;
+            }
+
+            const lyricsLineIndex = (i) => ((detectLyricsFileType(lyricsContent) === 'srt') ? i * 4 + 2 : i * 3 + 1);
+
+            for (let i = 0; i < originalLines.length; i++) {
+                const lyricsLine = lyricsLines[lyricsLineIndex(i)];
+                const originalLine = originalLines[i];
+                const translatedLine = translatedLines[i];
+
+                // Skip the last line if it is empty
+                if (i === originalLines.length - 1 && originalLine === '') {
+                    break;
+                }
+
+                if (lyricsLine !== originalLine) {
+                    alert(`第 ${i + 1} 行的字幕檔與原文歌詞檔的內容不同。\n字幕檔：${lyricsLine}\n原文歌詞檔：${originalLine}`);
+                    return;
+                }
+
+                lyricsLines[lyricsLineIndex(i)] = translatedLine;
+            }
+
+            translatedTextarea.value = lyricsLines.join('\n');
+        });
+
+        downloadButton.addEventListener('click', () => {
+            const content = translatedTextarea.value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = (detectLyricsFileType(content) === 'srt') ? 'translated.srt' : 'translated.sbv';
+            a.click();
+            URL.revokeObjectURL(url);
+            a.remove();
+        });
+        </script>
+
+</body>
+</html>
