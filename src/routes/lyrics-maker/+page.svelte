@@ -9,7 +9,6 @@
 
     let lyrics = $state<Array<{ start: number | null; end: number | null; text: string; ele: LyricsLine | null }>>([]);
     let currentIndex = $state<number>(0);
-
     let startThisLineCursor = $derived(currentIndex);
     let startNextLineCursor = $derived(lyrics[currentIndex]?.start ? currentIndex + 1 : currentIndex);
     let endThisLineCursor = $derived(currentIndex);
@@ -41,16 +40,19 @@
     });
 
     $effect(() => {
-        // scroll so that currentIndex is visible
-        const lyricsRect = lyrics[currentIndex]?.ele?.ele?.getBoundingClientRect();
+        // scroll so that currentIndex and (currentIndex + 1) is visible
+        const currLyricsRect = lyrics[currentIndex]?.ele?.ele?.getBoundingClientRect();
+        const nextLyricsRect = lyrics[currentIndex + 1]?.ele?.ele?.getBoundingClientRect();
+        const mergedTop = currLyricsRect ? currLyricsRect.top : nextLyricsRect ? nextLyricsRect.top : null;
+        const mergedBottom = nextLyricsRect ? nextLyricsRect.bottom : currLyricsRect ? currLyricsRect.bottom : null;
         const containerRect = lyricsContainerElement?.getBoundingClientRect();
-        if (lyricsRect && containerRect) {
-            if (lyricsRect.top < containerRect.top) {
+        if (mergedTop !== null && mergedBottom !== null && containerRect) {
+            if (mergedTop < containerRect.top) {
                 // scroll up
-                lyricsContainerElement!.scrollBy({ top: lyricsRect.top - containerRect.top - 8, behavior: 'smooth' });
-            } else if (lyricsRect.bottom > containerRect.bottom) {
+                lyricsContainerElement!.scrollBy({ top: mergedTop - containerRect.top - 8, behavior: 'smooth' });
+            } else if (mergedBottom > containerRect.bottom) {
                 // scroll down
-                lyricsContainerElement!.scrollBy({ top: lyricsRect.bottom - containerRect.bottom + 8, behavior: 'smooth' });
+                lyricsContainerElement!.scrollBy({ top: mergedBottom - containerRect.bottom + 8, behavior: 'smooth' });
             }
         }
     });
@@ -82,14 +84,16 @@
                 if (lyrics[currentIndex] && lyrics[currentIndex].start === null) {
                     // if current line hasn't started yet, start it
                     lyrics[currentIndex].start = getTimestamp();
-                } else if (lyrics[currentIndex + 1]) {
+                } else {
                     // end current line if needed
                     if (lyrics[currentIndex].end === null) {
                         lyrics[currentIndex].end = getTimestamp();
                     }
-                    // start next line
-                    lyrics[currentIndex + 1].start = getTimestamp();
-                    currentIndex = Math.min(currentIndex + 1, lyrics.length - 1);
+                    // start next line if exists
+                    if (lyrics[currentIndex + 1]) {
+                        lyrics[currentIndex + 1].start = getTimestamp();
+                        currentIndex = Math.min(currentIndex + 1, lyrics.length - 1);
+                    }
                 }
             },
         },
@@ -177,7 +181,6 @@
 
 
 <!-- TODO: preview subtitle panel (or modal) -->
-<!-- TODO: keyboard highlight for startThisLineCursor, startNextLineCursor, endThisLineCursor -->
 
 <div class="flex flex-col md:flex-row flex-1 min-h-0">
     <aside class="w-1/2 border-r border-gray-200 bg-gray-50 p-8 flex flex-col overflow-hidden">
@@ -219,9 +222,12 @@
                         bind:start={lyric.start}
                         bind:end={lyric.end}
                         bind:this={lyric.ele}
-                        highlightLyricsLine={index === currentIndex}
-                        highlightStart={index === startThisLineCursor || index === startNextLineCursor}
-                        highlightEnd={index === endThisLineCursor}
+                        thisIndex={index}
+                        {currentIndex}
+                        {startThisLineCursor}
+                        {startNextLineCursor}
+                        {endThisLineCursor}
+                        {callbacks}
                         createLyricsBefore={() => {
                             lyrics = [
                                 ...lyrics.slice(0, index),
