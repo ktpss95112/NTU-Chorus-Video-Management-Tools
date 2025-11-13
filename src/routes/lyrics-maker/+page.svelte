@@ -214,7 +214,6 @@
                 {/if}
             </div>
 
-            <!-- TODO</div>: fix flex issue, automatically grow to fill remaining space and show scrollbar -->
             <div bind:this={lyricsContainerElement} class="h-[400px] overflow-y-auto space-y-2 p-4 border border-gray-300 rounded-lg bg-gray-100 shadow-md">
                 {#each lyrics as lyric, index (index)}
                     <LyricsLine

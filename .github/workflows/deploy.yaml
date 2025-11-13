@@ -32,6 +32,7 @@ jobs:
       - name: Build
         env:
           VITE_GITHUB_REPO: ${{ github.repository }}
+          BASE_PATH: '/${{ github.event.repository.name }}'
         run: npm run build
 
       - name: Deploy

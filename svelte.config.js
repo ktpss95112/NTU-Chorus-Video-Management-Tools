@@ -8,14 +8,12 @@ const config = {
 			// these options are set automatically — see below
 			pages: 'build',
 			assets: 'build',
-			fallback: undefined,
-			precompress: false,
-			strict: true
+			precompress: !process.argv.includes('dev'),
+			strict: true,
 		}),
 		paths: {
-			// TODO: set GitHub Pages as in https://svelte.dev/docs/kit/adapter-static#GitHub-Pages
-			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
-		}
+			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH,
+		},
 	}
 };
 
