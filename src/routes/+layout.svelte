@@ -19,9 +19,10 @@
             </a>
 
             <ul class="flex items-center gap-3">
-                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/' ? "bg-white/20" : ""]} href="/">Home</a></li>
-                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/lyrics-maker' ? "bg-white/20" : ""]} href="/lyrics-maker">Lyrics Maker</a></li>
-                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/lyrics-translation' ? "bg-white/20" : ""]} href="/lyrics-translation">Lyrics Translation</a></li>
+                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/' ? "bg-white/20" : ""]} href="/">首頁</a></li>
+                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/lyrics-maker' ? "bg-white/20" : ""]} href="/lyrics-maker">上字幕</a></li>
+                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/lyrics-translation' ? "bg-white/20" : ""]} href="/lyrics-translation">歌詞翻譯</a></li>
+                <li><a class="px-3 py-1 rounded hover:bg-white/40" href="/old-files/index.html">舊版工具</a></li>
             </ul>
         </div>
     </nav>
