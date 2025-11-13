@@ -2,6 +2,7 @@
     import '../app.css';
     import favicon from '$lib/assets/favicon.svg';
     import { page } from '$app/state';
+    import { resolve, asset } from '$app/paths';
 
     let { children } = $props();
 </script>
@@ -13,16 +14,16 @@
 <div class="min-h-screen flex flex-col">
     <nav class="bg-slate-900 text-white sticky top-0 z-40 shadow-sm">
         <div class="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between gap-4">
-            <a class="flex items-center gap-2 no-underline text-current" href="/">
+            <a class="flex items-center gap-2 no-underline text-current" href={resolve("/")}>
                 <img src={favicon} alt="NTU Chorus logo" class="w-8 h-8" />
                 <span class="font-semibold text-base">NTU Chorus Video Tools</span>
             </a>
 
             <ul class="flex items-center gap-3">
-                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/' ? "bg-white/20" : ""]} href="/">首頁</a></li>
-                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/lyrics-maker' ? "bg-white/20" : ""]} href="/lyrics-maker">上字幕</a></li>
-                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === '/lyrics-translation' ? "bg-white/20" : ""]} href="/lyrics-translation">歌詞翻譯</a></li>
-                <li><a class="px-3 py-1 rounded hover:bg-white/40" href="/old-files/index.html">舊版工具</a></li>
+                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === resolve('/') ? "bg-white/20" : ""]} href={resolve("/")}>首頁</a></li>
+                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === resolve('/lyrics-maker') ? "bg-white/20" : ""]} href={resolve("/lyrics-maker")}>上字幕</a></li>
+                <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === resolve('/lyrics-translation') ? "bg-white/20" : ""]} href={resolve("/lyrics-translation")}>歌詞翻譯</a></li>
+                <li><a class="px-3 py-1 rounded hover:bg-white/40" href={asset("/old-files/index.html")}>舊版工具</a></li>
             </ul>
         </div>
     </nav>
