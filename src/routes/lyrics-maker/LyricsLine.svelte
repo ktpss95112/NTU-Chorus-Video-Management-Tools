@@ -3,27 +3,35 @@
         text = $bindable(),
         start = $bindable(),
         end = $bindable(),
+        highlightLyricsLine,
         highlightStart,
         highlightEnd,
         createLyricsBefore,
         createLyricsAfter,
         deleteThisLine,
         onfocus,
+        onblur,
     } = $props<{
         text: string;
         start: number | null;
         end: number | null;
+        highlightLyricsLine: boolean;
         highlightStart: boolean;
         highlightEnd: boolean;
         createLyricsBefore: () => void;
         createLyricsAfter: () => void;
         deleteThisLine: () => void;
         onfocus: () => void;
+        onblur: () => void;
     }>();
+
+    let ele = $state<HTMLDivElement | null>(null);
+
+    export { ele };
 </script>
 
 
-<div class="flex gap-2 items-start">
+<div bind:this={ele} class={["flex gap-1 items-start p-1", highlightLyricsLine ? 'ring-2 ring-black-400 rounded-md' : '']}>
     <div class="grid grid-cols-[auto_1fr] grid-rows-3 gap-0.5 items-center flex-1 min-w-0">
         <button
             class="col-start-1 row-start-1 w-4 h-4 flex items-center justify-center self-start rounded-full border border-gray-300 text-gray-700 text-[10px] leading-none bg-white hover:bg-gray-100 active:scale-95 transition duration-150 shadow-sm"
@@ -36,9 +44,10 @@
 
         <textarea
             bind:value={text}
-            class="col-start-2 row-span-3 p-1.5 text-sm min-h-[2.5rem] w-full resize-y rounded border border-gray-300 bg-white/70 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            class="col-start-2 row-span-3 p-1.5 text-sm min-h-[2.5rem] w-full resize-y rounded border border-gray-300 bg-white/70 focus:outline-none focus:ring-1"
             placeholder="Enter lyrics..."
             {onfocus}
+            {onblur}
         ></textarea>
 
         <button
@@ -69,6 +78,7 @@
             class={["w-full min-w-0 p-0.5 text-[10px] text-center rounded border border-gray-300 focus:outline-none", highlightStart ? 'ring-2 ring-blue-400' : '']}
             placeholder="00:00:00.000"
             {onfocus}
+            {onblur}
         />
         <span class="text-[10px] text-gray-600 text-right">結束</span>
         <input
@@ -78,6 +88,7 @@
             class={["w-full min-w-0 p-0.5 text-[10px] text-center rounded border border-gray-300 focus:outline-none", highlightEnd ? 'ring-2 ring-blue-400' : '']}
             placeholder="00:00:00.000"
             {onfocus}
+            {onblur}
         />
     </div>
 </div>
