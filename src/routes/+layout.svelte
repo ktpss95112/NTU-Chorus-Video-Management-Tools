@@ -23,7 +23,7 @@
                 <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === resolve('/') ? "bg-white/20" : ""]} href={resolve("/")}>首頁</a></li>
                 <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === resolve('/lyrics-maker') ? "bg-white/20" : ""]} href={resolve("/lyrics-maker")}>上字幕</a></li>
                 <li><a class={["px-3 py-1 rounded hover:bg-white/40", page.url.pathname === resolve('/lyrics-translation') ? "bg-white/20" : ""]} href={resolve("/lyrics-translation")}>歌詞翻譯</a></li>
-                <li><a class="px-3 py-1 rounded hover:bg-white/40" href={asset("/old-files/index.html")}>舊版工具</a></li>
+                <li><a class="px-3 py-1 rounded hover:bg-white/40" href={asset("/old-files/index.html")} target="_blank">舊版工具</a></li>
             </ul>
         </div>
     </nav>
