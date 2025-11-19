@@ -50,7 +50,7 @@
 
         <textarea
             bind:value={text}
-            class="col-start-2 row-span-3 p-1.5 text-sm min-h-[2.5rem] w-full resize-y rounded border border-gray-300 bg-white/70 focus:outline-none focus:ring-1"
+            class="col-start-2 row-span-3 p-1.5 text-sm min-h-10 w-full resize-y rounded border border-gray-300 bg-white/70 focus:outline-none focus:ring-1"
             placeholder="Enter lyrics..."
             {onfocus}
             {onblur}
