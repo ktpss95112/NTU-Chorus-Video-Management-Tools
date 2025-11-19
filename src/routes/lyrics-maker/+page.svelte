@@ -193,7 +193,7 @@
         </div>
 
         {#if lyricsFile && lyricsFile.length > 0}
-            <div class="flex items-center gap-4 mb-4 flex-shrink-0">
+            <div class="flex items-center gap-4 mb-4 shrink-0">
                 你是
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="radio" bind:group={needReactionTime} value={false} class="w-4 h-4 text-indigo-600" />
