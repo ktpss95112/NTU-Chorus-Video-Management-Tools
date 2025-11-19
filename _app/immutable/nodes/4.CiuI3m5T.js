@@ -1,1 +1,0 @@
-import{f as a,a as o}from"../chunks/DFsHLSiA.js";import"../chunks/B4vJ6Znq.js";var r=a('<main class="flex-1 flex items-center justify-center p-4 box-border"><div class="text-center"><h1 class="text-2xl font-semibold">lyrics-translation</h1></div></main>');function i(t){var e=r();o(t,e)}export{i as component};
