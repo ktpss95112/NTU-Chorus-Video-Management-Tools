@@ -86,7 +86,7 @@
                     lyrics[currentIndex].start = getTimestamp();
                 } else {
                     // end current line if needed
-                    if (lyrics[currentIndex].end === null) {
+                    if (lyrics[currentIndex].end === null || lyrics[currentIndex].end! > getTimestamp()) {
                         lyrics[currentIndex].end = getTimestamp();
                     }
                     // start next line if exists
@@ -181,6 +181,10 @@
 
 
 <!-- TODO: preview subtitle panel (or modal) -->
+<!-- TODO: save the user uploaded file using IndexedDB -->
+<!-- TODO: load YouTube video (if doable) (lazy load the YouTube IFrame API) -->
+<!-- TODO: support Ctrl+Z -->
+
 
 <div class="flex flex-col md:flex-row flex-1 min-h-0">
     <aside class="w-1/2 border-r border-gray-200 bg-gray-50 p-8 flex flex-col overflow-hidden">
